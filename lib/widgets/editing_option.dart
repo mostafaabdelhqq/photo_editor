@@ -8,94 +8,86 @@ class EditingOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImageProviderModel>(context);
+    final hasImage = imageProvider.imageFile != null;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: 50,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Icon(Icons.filter),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: 300,
-                      child: ListView(
-                        children: [
-                          ListTile(
-                            title: Text('Sobel Filter'),
-                            onTap: () {
-                              imageProvider.selectFilter('Sobel');
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            title: Text('Laplacian Filter'),
-                            onTap: () {
-                              imageProvider.selectFilter('Laplacian');
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            title: Text('Gaussian Filter'),
-                            onTap: () {
-                              imageProvider.selectFilter('Gaussian');
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            title: Text('Neighbourhood Average Filter'),
-                            onTap: () {
-                              imageProvider
-                                  .selectFilter('Neighbourhood Average');
-                              Navigator.pop(context);
-                            },
-                          ),
-                          // Slider للتحكم في قوة الفلتر
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
+              icon: const Icon(Icons.filter, color: Colors.blue),
+              onPressed: hasImage
+                  ? () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListView(
                               children: [
-                                Text(
-                                    'Filter Strength: ${imageProvider.filterStrength.toStringAsFixed(1)}'),
-                                Slider(
-                                  min: 1,
-                                  max: 30,
-                                  divisions: 30,
-                                  value: imageProvider.filterStrength,
-                                  label:
-                                      imageProvider.filterStrength.toString(),
-                                  onChanged: (double value) {
-                                    imageProvider.setFilterStrength(value);
+                                const Text(
+                                  'Choose a Filter',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.filter),
+                                  title: const Text('Sobel Filter'),
+                                  onTap: () {
+                                    imageProvider.selectFilter('Sobel');
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.filter),
+                                  title: const Text('Laplacian Filter'),
+                                  onTap: () {
+                                    imageProvider.selectFilter('Laplacian');
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.filter),
+                                  title: const Text('Smoothing Filter'),
+                                  onTap: () {
+                                    imageProvider.selectFilter('Smoothing');
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.filter),
+                                  title: const Text(
+                                      'Neighbourhood Average Filter'),
+                                  onTap: () {
+                                    imageProvider
+                                        .selectFilter('Neighbourhood Average');
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
+                          );
+                        },
+                      );
+                    }
+                  : null,
             ),
             IconButton(
-              icon: Icon(Icons.crop),
-              onPressed: () {
-                final cropRect = Rect.fromLTWH(100, 100, 300, 300);
-                imageProvider.cropImage(cropRect, context);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.rotate_right),
-              onPressed: () {
-                imageProvider.rotateImage(context);
-              },
+              icon: Icon(Icons.save,
+                  color: hasImage ? Colors.green : Colors.grey),
+              onPressed: hasImage
+                  ? () async {
+                      await imageProvider.saveEditedImage(context);
+                    }
+                  : null,
             ),
           ],
         ),

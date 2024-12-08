@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_editor_app/providers/image_provider.dart';
 import 'package:photo_editor_app/providers/theme_provider.dart';
 import 'package:photo_editor_app/widgets/custom_screen_body.dart';
 import 'package:photo_editor_app/widgets/pick_photo.dart';
@@ -27,8 +28,13 @@ class ImageEditorScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const CustomScreenBody(),
-      floatingActionButton: const PickPhoto(),
+      body: Consumer<ImageProviderModel>(
+        // استخدام Consumer لمتابعة التغييرات
+        builder: (context, imageProvider, child) {
+          return CustomScreenBody();
+        },
+      ),
+      floatingActionButton: const PickPhoto(), // زر لاختيار الصور
     );
   }
 }

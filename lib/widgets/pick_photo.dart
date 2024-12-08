@@ -15,12 +15,14 @@ class PickPhoto extends StatelessWidget {
           FloatingActionButton(
             onPressed: () => getImage(context, ImageSource.camera),
             tooltip: 'Pick Image from Camera',
+            heroTag: 'uniqueTag1',
             child: const Icon(Icons.camera_alt),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () => getImage(context, ImageSource.gallery),
             tooltip: 'Pick Image from Gallery',
+            heroTag: 'uniqueTag2',
             child: const Icon(Icons.photo_library),
           ),
         ],
